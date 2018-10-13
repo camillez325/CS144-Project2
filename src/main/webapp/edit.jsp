@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Edit Post</title>
+    <title>Edit  12 Post</title>
 </head>
 <body>
-    <div><h1>Edit Post</h1></div>
+    <div><h1>Edit 12 Post</h1></div>
     <form>
         <div>
             <button type="submit">Save</button>
@@ -25,11 +25,14 @@
         <div>
             <label for="title">Title</label>
             <input type="text" id="title">
-            /*changed id to title here*/
+            <!--changed id to title here*/-->
         </div>
         <div>
             <label for="body">Body</label>
-            <textarea style="height: 20rem;" id="body"></textarea>
+            <textarea style="height: 20rem;" id="body">
+                <%= request.getAttribute("body") %>
+
+            </textarea>
         </div>
     </form>
 </body>
