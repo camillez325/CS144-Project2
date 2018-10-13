@@ -1,11 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Edit  12 Post</title>
+    <title>Edit  Post</title>
 </head>
 <body>
-    <div><h1>Edit 12 Post</h1></div>
+    <div><h1>Edit Post</h1></div>
     <form>
         <div>
             <button type="submit">Save</button>
@@ -30,7 +29,8 @@
         <div>
             <label for="body">Body</label>
             <textarea style="height: 20rem;" id="body">
-                <%= request.getAttribute("body") %>
+            Sample Body text.
+                <!--%= request.getAttribute("body") %-->
 
             </textarea>
         </div>
