@@ -1,10 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Edit  Post</title>
+<<<<<<< HEAD
+    <title>Edit Post2</title>
 </head>
 <body>
-    <div><h1>Edit Post</h1></div>
+    <div><h1>Edit Post2</h1></div>
+=======
+    <title>Edit  12 Post</title>
+</head>
+<body>
+    <div><h1>Edit 12 Post</h1></div>
+>>>>>>> 19b6c8ce64f6d76e83989ac98a8d4597483dcc7d
     <form>
         <div>
             <button type="submit">Save</button>
@@ -28,11 +36,14 @@
         </div>
         <div>
             <label for="body">Body</label>
+<<<<<<< HEAD
+            <textarea style="height: 20rem;" id="body"><%= request.getAttribute("body") %></textarea>
+=======
             <textarea style="height: 20rem;" id="body">
-            Sample Body text.
-                <!--%= request.getAttribute("body") %-->
+                <%= request.getAttribute("body") %>
 
             </textarea>
+>>>>>>> 19b6c8ce64f6d76e83989ac98a8d4597483dcc7d
         </div>
     </form>
 </body>
