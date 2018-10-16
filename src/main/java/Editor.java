@@ -106,6 +106,8 @@ public class Editor extends HttpServlet {
                 Post post = retrievePost(username, postid);
                 request.setAttribute("title",post.title);
                 request.setAttribute("body", post.body);
+                request.setAttribute("username",post.username);
+                request.setAttribute("postid", post.postid);
                 request.getRequestDispatcher("/edit.jsp").forward(request, response);
                 break;
 
@@ -142,11 +144,15 @@ public class Editor extends HttpServlet {
         switch (action) {
             case "save":
                 // System.out.println("arrived at save");
-                doSave("tom", -1, title, body);
+                doSave(username, postid, title, body);
                 // System.out.println("finished save");
                 // request.setAttribute("body", "ok this works2");
                 // request.getRequestDispatcher("/edit.jsp").forward(request, response);
-
+                request.setAttribute("username",username);
+                request.setAttribute("postid", post_id);
+                request.setAttribute("title", title);
+                request.setAttribute("body", body);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);
 
         }
         // request.getRequestDispatcher("/edit.jsp").forward(request, response);

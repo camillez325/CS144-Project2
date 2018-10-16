@@ -6,20 +6,24 @@
 </head>
 <body>
     <div><h1>Edit Post</h1></div>
-    <form>
+    <form action="post" method="POST" >
+        <!-- Add the hidden inputs as described in 144 discussion session on Friday-->
+        <input type="hidden"  name="username"  value='<%= request.getAttribute("username") %>'>
+        <input  type="hidden" name="postid" value='<%= request.getAttribute("postid") %>'>
         <div>
-            <button type="submit">Save</button>
-            <button type="submit">Close</button>
-            <button type="submit">Preview</button>
-            <button type="submit">Delete</button>
+            <button type="submit" name="action" value="save">Save</button>
+            <button type="submit" name="action" value="close">Close</button>
+            <button type="submit" name='action' value="preview">Preview</button>
+            <button type="submit" name='action' value="delete">Delete</button>
+        </div>
+
+        <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value='<%= request.getAttribute("title") %>'>
         </div>
         <div>
-            <label for="title">Title</label>
-            <input type="text" id="text">
-        </div>
-        <div>
-            <label for="body">Body</label>
-            <textarea style="height: 20rem;" id="body"><%= request.getAttribute("body") %></textarea>
+        <label for="body">Body</label>
+        <textarea style="height: 20rem;" id="body" name="body"><%= request.getAttribute("body")%></textarea>
         </div>
     </form>
 </body>
