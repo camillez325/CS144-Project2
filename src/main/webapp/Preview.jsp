@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <!-- Need to change the header here eventually-->
-    <title>Edit Post</title>
+    <title>Preview Post</title>
 </head>
 <body>
-    <div><h1>Edit Post</h1></div>
+    <div><h1>Preview Post</h1></div>
     <form>
+        <input type="hidden"  name="username"  value='<%= request.getAttribute("username") %>'>
+        <input  type="hidden" name="postid" value='<%= request.getAttribute("postid") %>'>
         <div>
 
-            <button type="submit">Close Preview</button>
+            <button type="submit" name="action" value="open">Close Preview</button>
 
 <!-- so eventually we can implement these action buttons
     maybe we could test these one at a time
 
             <button type="submit" name="action" value="list">Close Preview</button>
-
+    
 -->
 
+</form>
+<h1><%= request.getAttribute("mktitle") %></h1>
+<h2><%= request.getAttribute("mkbody") %></h2>
+         
 
-        </div>
-        <div>
-            <label for="body">Body</label>
-            <textarea style="height: 20rem;" id="body"></textarea>
-        </div>
-    </form>
+
+
 </body>
 </html>
