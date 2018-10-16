@@ -34,6 +34,7 @@ public class Editor extends HttpServlet {
     private PreparedStatement retrievedStmt = null;
     private PreparedStatement postStmt = null;
     private PreparedStatement updateStmt = null;
+    private PreparedStatement dltStmt = null;
     private int maxid = 0;
 
     public void init() throws ServletException
@@ -153,6 +154,10 @@ public class Editor extends HttpServlet {
                 request.setAttribute("title", title);
                 request.setAttribute("body", body);
                 request.getRequestDispatcher("/edit.jsp").forward(request, response);
+            case "delete":
+                doDelete(username, postid);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+
 
         }
         // request.getRequestDispatcher("/edit.jsp").forward(request, response);
@@ -339,5 +344,51 @@ public class Editor extends HttpServlet {
     }
 
 
-}
+private void doDelete(String username, int postid) { 
+    try{ 
+        try {  
+                    Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException ex) {
+                    System.out.println(ex);
+                    return;
+                }
+            
+                Connection c = null;
+                //Statement  s = null; 
+                //ResultSet rs = null; 
 
+        try {
+                    /* create an instance of a Connection object */
+                    c = DriverManager.getConnection("jdbc:mysql://localhost:3306/CS144", "cs144", ""); 
+                    dltStmt = c.prepareStatement(
+                        "DELETE FROM Posts where username=? and postid=?"
+                    );   
+            } catch (SQLException ex){
+                    System.out.println("SQLException caught");
+                    System.out.println("---");
+                    while ( ex != null ) {
+                        System.out.println("Message   : " + ex.getMessage());
+                        System.out.println("SQLState  : " + ex.getSQLState());
+                        System.out.println("ErrorCode : " + ex.getErrorCode());
+                        System.out.println("---");
+                        ex = ex.getNextException();
+                    }
+                }
+                //--------//
+                dltStmt.setString(1, username);
+                dltStmt.setInt(2, postid);
+                dltStmt.executeUpdate();
+        }  catch (SQLException ex){
+            System.out.println("SQLException caught");
+            System.out.println("---");
+            while ( ex != null ) {
+                System.out.println("Message   : " + ex.getMessage());
+                System.out.println("SQLState  : " + ex.getSQLState());
+                System.out.println("ErrorCode : " + ex.getErrorCode());
+                System.out.println("---");
+                ex = ex.getNextException();
+            }
+        }
+
+    }
+}
