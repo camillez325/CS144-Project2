@@ -17,6 +17,9 @@ import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Servlet implementation class for Servlet: ConfigurationTest
  *
@@ -34,6 +37,7 @@ public class Editor extends HttpServlet {
     private PreparedStatement retrievedStmt = null;
     private PreparedStatement postStmt = null;
     private PreparedStatement updateStmt = null;
+    private PreparedStatement maxStmt = null;
     private PreparedStatement dltStmt = null;
     private int maxid = 0;
 
@@ -104,12 +108,20 @@ public class Editor extends HttpServlet {
         //handles open, preview, list
         switch (action) {
             case "open":
-                Post post = retrievePost(username, postid);
+                if (postid<=0) {
+                request.setAttribute("title","");
+                request.setAttribute("body", "");
+                request.setAttribute("username",username);
+                request.setAttribute("postid", postid);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+                                   
+                }
+                else {Post post = retrievePost(username, postid);
                 request.setAttribute("title",post.title);
                 request.setAttribute("body", post.body);
-                request.setAttribute("username",post.username);
-                request.setAttribute("postid", post.postid);
-                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+                request.setAttribute("username",username);
+                request.setAttribute("postid", postid);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);}
                 break;
 
             case "preview":
@@ -124,6 +136,33 @@ public class Editor extends HttpServlet {
                 request.getRequestDispatcher("/preview.jsp").forward(request, response);
                 break;
             case "list":
+                request.setAttribute("username",username);
+                List<Integer> lid= new ArrayList<Integer>();
+                List<String> ltitle= new ArrayList<String>();
+                List<String> lcreated= new ArrayList<String>();
+                List<String> lmodified= new ArrayList<String>();
+                List<Post> lpost= listposts(username);
+                for (Post postloop: lpost)
+                {
+                    lid.add(postloop.postid);
+                    ltitle.add(postloop.title);
+                    //DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                    String strC = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.created);
+                    String strM = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.modified);
+     
+                    //String strC = dateFormat.format(postloop.created);
+                    //String strM = dateFormat.format(postloop.modified);
+                    lcreated.add(strC);
+                    lmodified.add(strM);
+                }
+
+                request.setAttribute("lcount",lpost.size());
+                request.setAttribute("lid",lid);
+                request.setAttribute("ltitle",ltitle);
+                request.setAttribute("lcreated",lcreated);
+                request.setAttribute("lmodified",lmodified);
+                request.setAttribute("lpost",lpost);
+                request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
             default:
                 System.out.println("ok works");
@@ -151,28 +190,62 @@ public class Editor extends HttpServlet {
         String title = request.getParameter("title");
         String body = request.getParameter("body");
         int postid = (post_id == null) ? 0 : Integer.parseInt(post_id);
+        List<Integer> lid= new ArrayList<Integer>();
+        List<String> ltitle= new ArrayList<String>();
+        List<String> lcreated= new ArrayList<String>();
+        List<String> lmodified= new ArrayList<String>();
+        String strC="";
+        String strM="";
+        List<Post> lpost= null;
         switch (action) {
             case "save":
                 // System.out.println("arrived at save");
                 doSave(username, postid, title, body);
-                // System.out.println("finished save");
-                // request.setAttribute("body", "ok this works2");
-                // request.getRequestDispatcher("/edit.jsp").forward(request, response);
                 request.setAttribute("username",username);
-                request.setAttribute("postid", post_id);
-                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+
+                lpost= listposts(username);
+                for (Post postloop: lpost)
+                {
+                    lid.add(postloop.postid);
+                    ltitle.add(postloop.title);
+                    //DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                    strC = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.created);
+                    strM = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.modified);
+     
+                    //String strC = dateFormat.format(postloop.created);
+                    //String strM = dateFormat.format(postloop.modified);
+                    lcreated.add(strC);
+                    lmodified.add(strM);
+                }
+
+                request.setAttribute("lcount",lpost.size());
+                request.setAttribute("lid",lid);
+                request.setAttribute("ltitle",ltitle);
+                request.setAttribute("lcreated",lcreated);
+                request.setAttribute("lmodified",lmodified);
+                request.setAttribute("lpost",lpost);
+                request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
             case "delete":
                 doDelete(username, postid);
-                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+                request.setAttribute("username",username);
+                request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
             case "open":
-                Post post = retrievePost(username, postid);
+                if (postid<=0) {
+                request.setAttribute("title","");
+                request.setAttribute("body", "");
+                request.setAttribute("username",username);
+                request.setAttribute("postid", postid);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+                                   
+                }
+                else {Post post = retrievePost(username, postid);
                 request.setAttribute("title",post.title);
                 request.setAttribute("body", post.body);
-                request.setAttribute("username",post.username);
-                request.setAttribute("postid", post.postid);
-                request.getRequestDispatcher("/edit.jsp").forward(request, response);
+                request.setAttribute("username",username);
+                request.setAttribute("postid", postid);
+                request.getRequestDispatcher("/edit.jsp").forward(request, response);}
                 break;
 
             case "preview":
@@ -186,8 +259,32 @@ public class Editor extends HttpServlet {
                 request.setAttribute("postid", post_id);
                 request.getRequestDispatcher("/preview.jsp").forward(request, response);
                 break;
-            case "list":
+         case "list":
+                request.setAttribute("username",username);
+                lpost= listposts(username);
+                for (Post postloop: lpost)
+                {
+                    lid.add(postloop.postid);
+                    ltitle.add(postloop.title);
+                    //DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                    strC = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.created);
+                    strM = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.modified);
+     
+                    //String strC = dateFormat.format(postloop.created);
+                    //String strM = dateFormat.format(postloop.modified);
+                    lcreated.add(strC);
+                    lmodified.add(strM);
+                }
+
+                request.setAttribute("lcount",lpost.size());
+                request.setAttribute("lid",lid);
+                request.setAttribute("ltitle",ltitle);
+                request.setAttribute("lcreated",lcreated);
+                request.setAttribute("lmodified",lmodified);
+                request.setAttribute("lpost",lpost);
+                request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
+            
             default:
                 System.out.println("ok works");
                 request.setAttribute("body", "ok this works");
@@ -240,7 +337,8 @@ public class Editor extends HttpServlet {
             retrievedStmt.setInt(2, postid);
             ResultSet rs = retrievedStmt.executeQuery();
             while (rs.next()) {
-                post = new Post(rs.getString("username"), rs.getInt("postid"), rs.getString("title"), rs.getString("body"));
+                post = new Post(rs.getString("username"), rs.getInt("postid"), rs.getString("title"), rs.getString("body"), rs.getTimestamp("created") 
+                    , rs.getTimestamp("modified"));
             }
         } catch (SQLException ex){
             System.out.println("SQLException caught");
@@ -265,7 +363,7 @@ public class Editor extends HttpServlet {
                     Class.forName("com.mysql.jdbc.Driver");
                 } catch (ClassNotFoundException ex) {
                     System.out.println(ex);
-                    return;
+                    //return;
                 }
             
                 Connection c = null;
@@ -278,6 +376,9 @@ public class Editor extends HttpServlet {
                     postStmt = c.prepareStatement(
                         "INSERT INTO Posts (username, postid, title, body, modified, created) VALUES (?, ?, ?, ?, ?, ?)"
                     );   
+                    maxStmt = c.prepareStatement(
+                        "select max postid from Posts where username=? "
+                    );    
                 } catch (SQLException ex){
                     System.out.println("SQLException caught");
                     System.out.println("---");
@@ -290,6 +391,8 @@ public class Editor extends HttpServlet {
                     }
                 }
                 //--------//
+                maxStmt.setString(1, username);
+
                 postStmt.setString(1, username);
                 postStmt.setInt(2, maxid+1);
                 postStmt.setString(3, title);
@@ -303,7 +406,7 @@ public class Editor extends HttpServlet {
                     Class.forName("com.mysql.jdbc.Driver");
                 } catch (ClassNotFoundException ex) {
                     System.out.println(ex);
-                    return;
+                    //return;
                 }
 
                 try {
@@ -423,6 +526,51 @@ public class Editor extends HttpServlet {
                 ex = ex.getNextException();
             }
         }
+
+    }
+    // in the following array list you have to set each of the title, created and modified for the lisp jsp file to easily process.
+    private List<Post> listposts(String username) { 
+    List<Post> userposts= new ArrayList<Post>(); 
+           try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+            return userposts;
+        }
+    
+        Connection c = null;
+        Statement  s = null; 
+
+        try {
+            /* create an instance of a Connection object */
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/CS144", "cs144", ""); 
+            retrievedStmt = c.prepareStatement(
+                "SELECT * FROM Posts where username = ?"
+            );   
+            retrievedStmt.setString(1, username);
+           // retrievedStmt.setInt(2, postid);
+            ResultSet rsl = retrievedStmt.executeQuery();
+                while (rsl.next()) {
+                    // For each row, set that row to be a new post object in your list array.
+                Post curpost = new Post(rsl.getString("username"), rsl.getInt("postid"), rsl.getString("title"), rsl.getString("body"), rsl.getTimestamp("created") 
+                    , rsl.getTimestamp("modified"));
+                userposts.add(curpost);
+
+                }
+               return userposts;
+
+        }  catch (SQLException ex){
+            System.out.println("SQLException caught");
+            System.out.println("---");
+            while ( ex != null ) {
+                System.out.println("Message   : " + ex.getMessage());
+                System.out.println("SQLState  : " + ex.getSQLState());
+                System.out.println("ErrorCode : " + ex.getErrorCode());
+                System.out.println("---");
+                ex = ex.getNextException();
+            }
+        }
+        finally {return userposts;}
 
     }
     
