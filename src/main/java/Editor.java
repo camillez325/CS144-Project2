@@ -229,6 +229,27 @@ public class Editor extends HttpServlet {
             case "delete":
                 doDelete(username, postid);
                 request.setAttribute("username",username);
+                lpost= listposts(username);
+                for (Post postloop: lpost)
+                {
+                    lid.add(postloop.postid);
+                    ltitle.add(postloop.title);
+                    //DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                    strC = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.created);
+                    strM = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(postloop.modified);
+     
+                    //String strC = dateFormat.format(postloop.created);
+                    //String strM = dateFormat.format(postloop.modified);
+                    lcreated.add(strC);
+                    lmodified.add(strM);
+                }
+
+                request.setAttribute("lcount",lpost.size());
+                request.setAttribute("lid",lid);
+                request.setAttribute("ltitle",ltitle);
+                request.setAttribute("lcreated",lcreated);
+                request.setAttribute("lmodified",lmodified);
+                request.setAttribute("lpost",lpost);
                 request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
             case "open":
@@ -377,7 +398,7 @@ public class Editor extends HttpServlet {
                         "INSERT INTO Posts (username, postid, title, body, modified, created) VALUES (?, ?, ?, ?, ?, ?)"
                     );   
                     maxStmt = c.prepareStatement(
-                        "select max postid from Posts where username=? "
+                        "select Max(postid) postid from Posts where username=? "
                     );    
                 } catch (SQLException ex){
                     System.out.println("SQLException caught");
@@ -392,9 +413,12 @@ public class Editor extends HttpServlet {
                 }
                 //--------//
                 maxStmt.setString(1, username);
+                rs=maxStmt.executeQuery();
+                rs.next();
+                int curr_max=rs.getInt("postid");
 
                 postStmt.setString(1, username);
-                postStmt.setInt(2, maxid+1);
+                postStmt.setInt(2, curr_max+1);
                 postStmt.setString(3, title);
                 postStmt.setString(4, body);
                 postStmt.setTimestamp(5, getCurrentTimeStamp());
