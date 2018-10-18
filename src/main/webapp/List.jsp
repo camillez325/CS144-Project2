@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./project2.css">
     <title>List Page</title>
 </head>
 <body>
@@ -25,7 +26,7 @@
             <th> Modified</th>
             <th> Actions</th>
         </tr>
-    </table>
+    
         
 
             <% ArrayList<String> ltitle = (ArrayList)request.getAttribute("ltitle");%>
@@ -34,7 +35,8 @@
             <% ArrayList<Integer> lid = (ArrayList)request.getAttribute("lid");%>
             <% Object postcount= request.getAttribute("lcount") ;%>
             <% int lcount=(postcount == null) ? 0 : Integer.parseInt(postcount.toString());%> 
-    <% for (int lposts=0; lposts<lcount; lposts++){%>
+            
+    <% for (int lposts=0; lposts<lcount; lposts++){%> <tr>
     <form  method="POST" action="post">
         <input type="hidden"  name="postid"  value='<% out.print(lid.get(lposts)); %>'>
         <td><% out.print(ltitle.get(lposts)); %></td>
@@ -45,6 +47,8 @@
         <input type="hidden"  name="username"  value='<%= request.getAttribute("username") %>'>
     </form>
 <% } %>
+</tr>
+</table>
         
 
 

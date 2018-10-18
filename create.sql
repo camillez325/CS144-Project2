@@ -14,7 +14,3 @@ CREATE TABLE Posts(
   created	TIMESTAMP DEFAULT '2000-01-01 00:00:00',
   PRIMARY KEY(username, postid)
 );
-
-
-Insert into Posts Values('Camille',1,'My Favorite Post','This is a post','2000-01-01 00:00:00','2000-01-01 00:00:00');
-Insert into Posts Values('John',1,'My First Post','This is a post too','2000-01-01 00:00:00','2000-01-01 00:00:00');

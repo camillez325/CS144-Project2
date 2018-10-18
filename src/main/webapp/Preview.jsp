@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- Need to change the header here eventually-->
+     <link rel="stylesheet" type="text/css" href="./project2.css">
     <title>Preview Post</title>
 </head>
 <body>

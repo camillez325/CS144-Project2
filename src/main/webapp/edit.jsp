@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+     <link rel="stylesheet" type="text/css" href="./project2.css">
     <title>Edit Post</title>
 </head>
 <body>
